@@ -1,0 +1,406 @@
+{
+  "name": "Uptime Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "117a5ed3-642b-4d77-8e78-3fc0e6d4f1bb",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://demo.realworld.show",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "bf512357-b93e-4ce1-80dd-24ff9c9b0c90",
+      "name": "HTTP Request",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b63fef87-e9ea-4885-b6e2-e47108cb5416",
+              "leftValue": "={{$json.statusCode}}",
+              "rightValue": "200",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "80cbd848-6850-4d06-9e8d-f5c1bbdee009",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo",
+          "mode": "list",
+          "cachedResultName": "CryptoSheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 990008329,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo/edit#gid=990008329"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Time Stamp ": "={{new Date().toISOString()}}",
+            "URL ": "https://demo.realworld.show",
+            "Status Code": "={{$json.statusCode ?? 'No Response'}}",
+            "Issue": "Site is DOWN or unreachable"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Time Stamp ",
+              "displayName": "Time Stamp ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL ",
+              "displayName": "URL ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status Code",
+              "displayName": "Status Code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Issue",
+              "displayName": "Issue",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        -96
+      ],
+      "id": "90661daf-c132-4ca4-a783-94358f41ea3e",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WIaabDGVPdkBEYEA",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo",
+          "mode": "list",
+          "cachedResultName": "CryptoSheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 990008329,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo/edit#gid=990008329"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Time Stamp ": "={{new Date().toISOString()}}",
+            "URL ": "https://demo.realworld.show",
+            "Status Code": "={{$json.statusCode ?? 'No Response'}}",
+            "Issue": "Site is UP"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Time Stamp ",
+              "displayName": "Time Stamp ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL ",
+              "displayName": "URL ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status Code",
+              "displayName": "Status Code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Issue",
+              "displayName": "Issue",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        96
+      ],
+      "id": "6b60dff6-70b7-4f3b-adc2-1dc2b0973a51",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WIaabDGVPdkBEYEA",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        1168,
+        -16
+      ],
+      "id": "e9d31cba-4820-4928-8e07-1016a6a1ed11",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo",
+          "mode": "list",
+          "cachedResultName": "CryptoSheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 990008329,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo/edit#gid=990008329"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Time Stamp ": "={{new Date().toISOString()}}",
+            "URL ": "https://demo.realworld.show",
+            "Status Code": "ERROR",
+            "Issue": "={{$json.message ?? 'Workflow failed completely'}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Time Stamp ",
+              "displayName": "Time Stamp ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL ",
+              "displayName": "URL ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status Code",
+              "displayName": "Status Code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Issue",
+              "displayName": "Issue",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1376,
+        -16
+      ],
+      "id": "75a06636-70d9-49d1-892f-d1cab4b366c9",
+      "name": "Append row in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WIaabDGVPdkBEYEA",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2c5e18fe-ce09-4f16-a769-46efef2f7109",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "12d8814c090f02f4f5e69761a9f84f0b21ca07267b7d6dc25308dc4a65eb4945"
+  },
+  "id": "YK8WZNHyE7xzFl8A",
+  "tags": []
+}

@@ -1,0 +1,365 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8c3a1572-0efd-497e-847e-9e5efc00f69a",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=5&page=1&sparkline=false",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "2258e8a3-1db3-4ff4-854f-75f89d909da3",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const coins = $input.all();\n\nreturn coins.map(item => {\n  const c = item.json;\n  return {\n    json: {\n      rank: c.market_cap_rank ?? null,\n      name: c.name ?? 'Unknown',\n      symbol: c.symbol ? c.symbol.toUpperCase() : 'N/A',\n      price: c.current_price ?? 0,\n      change24h: c.price_change_percentage_24h != null ? parseFloat(c.price_change_percentage_24h) : 0,\n      coinId: c.id ?? 'unknown'\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "39414a64-f0a6-485a-adfb-38de6b5e8af5",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.coingecko.com/api/v3/coins/{{$('Code in JavaScript').first().json.coinId}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        624,
+        0
+      ],
+      "id": "7ea755d6-d63a-4b1a-8857-0da6f9f13ad5",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cebea23a-b427-4eed-bd6c-e8bc453e1bd7",
+              "leftValue": "={{$('Code in JavaScript').first().json.change24h}}",
+              "rightValue": 2,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        832,
+        0
+      ],
+      "id": "fe436ad6-99d8-459b-89ec-17198bb6604b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo",
+          "mode": "list",
+          "cachedResultName": "CryptoSheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Time Stamp": "={{new Date().toISOString()}}",
+            "Rank ": "={{$('Code in JavaScript').first().json.rank}}",
+            "Coin ": "={{$('Code in JavaScript').first().json.name}}",
+            "Price (24hr Change%)": "={{$('Code in JavaScript').first().json.price}}",
+            "Alert": "RISING"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Time Stamp",
+              "displayName": "Time Stamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Rank ",
+              "displayName": "Rank ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Coin ",
+              "displayName": "Coin ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Price (24hr Change%)",
+              "displayName": "Price (24hr Change%)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Alert",
+              "displayName": "Alert",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1040,
+        -96
+      ],
+      "id": "3ef6745b-7cd6-4333-b08b-45ce87227fc5",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WIaabDGVPdkBEYEA",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo",
+          "mode": "list",
+          "cachedResultName": "CryptoSheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Time Stamp": "={{new Date().toISOString()}}",
+            "Rank ": "={{$('Code in JavaScript').first().json.rank}}",
+            "Coin ": "={{$('Code in JavaScript').first().json.name}}",
+            "Price (24hr Change%)": "={{$('Code in JavaScript').first().json.price}}",
+            "Alert": "FALLING"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Time Stamp",
+              "displayName": "Time Stamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Rank ",
+              "displayName": "Rank ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Coin ",
+              "displayName": "Coin ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Price (24hr Change%)",
+              "displayName": "Price (24hr Change%)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Alert",
+              "displayName": "Alert",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1040,
+        96
+      ],
+      "id": "1939f616-59d1-4df8-a03e-0b61b5b6e31f",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WIaabDGVPdkBEYEA",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "381ea2b7-505a-42b7-98cb-3f80af034bb6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "12d8814c090f02f4f5e69761a9f84f0b21ca07267b7d6dc25308dc4a65eb4945"
+  },
+  "id": "U7gTDsqTQamZEDsQ",
+  "tags": []
+}
