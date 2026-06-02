@@ -29,27 +29,29 @@ Issue #1 (Password Validation) was selected for deep root cause analysis.
 The app has no client-side or server-side password policy — allowing 
 single-character passwords with no user feedback. Fix involves adding 
 frontend validation + enforcing rules on the backend as a second layer.  
-Full analysis in `Task1_QA_Report.pdf`.
+Full analysis in `Task1_QA_Report_PratyushKumarSaha.pdf`.
 
 ---
 
 ## Task 2 — n8n API Integration Workflow
 
-**File:** `Task2_Workflow_YourName.json`
+**File:** `Task2_Workflow_PratyushKumarSaha.json`
 
 ### APIs Used
-- **HackerNews API** (Primary) — `https://hacker-news.firebaseio.com/v2/topstories.json`
-  - Free, no API key, no rate limits
-  - Fetches top 5 story IDs
-- **HackerNews Item API** (Enrichment) — `https://hacker-news.firebaseio.com/v2/item/{id}.json`
-  - Fetches full details (title, score, comments) for each story
+- **CoinGecko Markets API** (Primary) — `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=5&page=1&sparkline=false`
+  - Free, no API key required
+  - Fetches top 5 cryptocurrencies by market cap including price and 24h change
+- **CoinGecko Coin Detail API** (Enrichment) — `https://api.coingecko.com/api/v3/coins/{coinId}`
+  - Fetches full details for the top ranked coin
+  - Used to enrich the primary data with additional market information
 
 ### How the Workflow Works
 1. **Schedule Trigger** fires every 1 hour
-2. **HTTP Request** fetches top 5 HackerNews story IDs
-3. **Code Node** transforms the response — extracts and maps top 5 IDs
-4. **HTTP Request (Enrich)** fetches full details for each story
-5. **IF Node** checks if score > 100 → routes to HOT or WATCH branch
+2. **HTTP Request** fetches top 5 cryptocurrencies from CoinGecko Markets API
+3. **Code Node** transforms the response — extracts rank, name, symbol, 
+   price, 24h change percentage, and coin ID
+4. **HTTP Request (Enrich)** fetches full coin details for the #1 ranked coin
+5. **IF Node** checks if 24h price change > 2% → routes to RISING or WATCH branch
 6. **Google Sheets** appends a digest row to "Morning Brief" sheet
 
 ### Error Handling
@@ -59,13 +61,13 @@ Full analysis in `Task1_QA_Report.pdf`.
 
 ### Output
 Results are written to Google Sheets with columns:
-`Timestamp | Rank | Title | Score | Comments | Alert`
+`Timestamp | Rank | Coin | Price (USD) | 24h Change % | Alert`
 
 ---
 
 ## Bonus Task — Uptime Monitor
 
-**File:** `Bonus_UptimeMonitor_YourName.json`
+**File:** `Bonus_UptimeMonitor_PratyushKumarSaha.json`
 
 ### How It Works
 1. **Schedule Trigger** pings `https://demo.realworld.show` every 5 minutes
