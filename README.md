@@ -63,6 +63,9 @@ Full analysis in `Task1_QA_Report_PratyushKumarSaha.pdf`.
 Results are written to Google Sheets with columns:
 `Timestamp | Rank | Coin | Price (USD) | 24h Change % | Alert`
 
+### Google Sheet Link
+`http://docs.google.com/spreadsheets/d/125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo/edit?gid=0#gid=0`
+
 ---
 
 ## Bonus Task — Uptime Monitor
@@ -79,6 +82,9 @@ Results are written to Google Sheets with columns:
 
 ### Columns logged
 `Timestamp | URL | Status Code | Issue`
+
+### Google Sheet Link
+`https://docs.google.com/spreadsheets/d/125tOo8FUMFXJM5eZrx4Dx-qQq9sO4m2k-Ro62xms0Jo/edit?gid=990008329#gid=990008329`
 
 ### Notable Finding
 During testing, the uptime monitor detected that `demo.realworld.show` 
