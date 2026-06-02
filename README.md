@@ -1,7 +1,7 @@
 # oytra-assessment
 # Oytra Assessment — Automation & QA Developer
 
-**Submitted by:** Pratyush Kumar Saha 
+**Submitted by:** Pratyush Kumar Saha
 **Role:** Associate Software Developer  
 **Date:** June 2026
 
